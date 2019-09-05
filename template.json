@@ -1,0 +1,80 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_souravvm2_name": {
+            "defaultValue": "souravvm2",
+            "type": "String"
+        },
+        "disks_souravvm2_OsDisk_1_19868d671e894cf282cfc9f16bb3b1fa_externalid": {
+            "defaultValue": "/subscriptions/c33b0b34-1040-444a-bfb3-a3f15b057987/resourceGroups/TESTPPNGROUP/providers/Microsoft.Compute/disks/souravvm2_OsDisk_1_19868d671e894cf282cfc9f16bb3b1fa",
+            "type": "String"
+        },
+        "networkInterfaces_souravvm2771_externalid": {
+            "defaultValue": "/subscriptions/c33b0b34-1040-444a-bfb3-a3f15b057987/resourceGroups/testppngroup/providers/Microsoft.Network/networkInterfaces/souravvm2771",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-03-01",
+            "name": "[parameters('virtualMachines_souravvm2_name')]",
+            "location": "westindia",
+            "plan": {
+                "name": "visual-studio-emulator-windows-server-2016-v1",
+                "product": "visual-studio-emulator-windows-server-2016",
+                "publisher": "apps-4-rent"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_D4_v3"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "apps-4-rent",
+                        "offer": "visual-studio-emulator-windows-server-2016",
+                        "sku": "visual-studio-emulator-windows-server-2016-v1",
+                        "version": "1.0.0"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "[concat(parameters('virtualMachines_souravvm2_name'), '_OsDisk_1_19868d671e894cf282cfc9f16bb3b1fa')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "StandardSSD_LRS",
+                            "id": "[parameters('disks_souravvm2_OsDisk_1_19868d671e894cf282cfc9f16bb3b1fa_externalid')]"
+                        },
+                        "diskSizeGB": 127
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_souravvm2_name')]",
+                    "adminUsername": "[parameters('virtualMachines_souravvm2_name')]",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[parameters('networkInterfaces_souravvm2771_externalid')]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "https://testppngroupdiag.blob.core.windows.net/"
+                    }
+                }
+            }
+        }
+    ]
+}
